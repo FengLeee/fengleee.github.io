@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="FengLeee">
 <meta property="og:description" content="Item Loaders 提供了一个便利的机制来帮助 populating(填充) scrapted Items；虽然，Items 可以通过它类似 dict API 来填充，ItemLoaders 提供了更多便利的方法来进行 populates；简而言之，Items 提供了被爬取数据的一个容器，而 Item Loaders 为该容器提供了 populating 的机制；Item Loaders 的">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-02T04:22:22.606Z">
+<meta property="og:updated_time" content="2017-08-02T04:51:11.751Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="scrapy中的item_loader">
 <meta name="twitter:description" content="Item Loaders 提供了一个便利的机制来帮助 populating(填充) scrapted Items；虽然，Items 可以通过它类似 dict API 来填充，ItemLoaders 提供了更多便利的方法来进行 populates；简而言之，Items 提供了被爬取数据的一个容器，而 Item Loaders 为该容器提供了 populating 的机制；Item Loaders 的">
@@ -363,7 +363,7 @@ item_loader.add_value(&apos;url&apos;, response.url)
 item = item_loader.load_item()
 
         yield item
-</code></pre><p>最后，当所有的数据都已经收集好了以后，将会通过 [ItemLoader.load_item()] 将其转换为 Item 并返回；</p>
+</code></pre><p>最后，当所有的数据都已经收集好了以后，将会通过 [ItemLoader.load_item()] 将其转换为 Item 并返回；<br><a id="more"></a></p>
 <h2 id="Input-and-Output-processors"><a href="#Input-and-Output-processors" class="headerlink" title="Input and Output processors"></a><strong>Input and Output processors</strong></h2><p>Item Loader 为每个 Item Field 单独提供了一个 Input processor 和一个 Output processor；Input processor 一旦它通过 <code>add_xpath()</code>，<code>add_css()</code>，<code>add_value()</code>, 方法收到提取到的数据便会执行，执行以后所得到的数据将仍然保存在 ItemLoader 实例中；当数据收集完成以后，ItemLoader 通过 load_item() 方法来进行填充并返回以填充的 Item 实例；看下面这个例子.</p>
 <pre><code>l = ItemLoader(Product(), some_selector)
 l.add_xpath(&apos;name&apos;, xpath1) # (1)

@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="FengLeee">
 <meta property="og:description" content="自定义图片下载 from scrapy.pipelines.images import ImagesPipeline from scrapy.exceptions import DropItem import scrapy  class MyImagesPipeline(ImagesPipeline):     &amp;apos;&amp;apos;&amp;apos;自定义图片下载器,以图片url为路径保存图片&amp;ap">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-02T04:18:33.822Z">
+<meta property="og:updated_time" content="2017-08-02T04:51:04.481Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="重写scrapy.pipelines.images.ImagesPipeline方法实现自定义图片下载">
 <meta name="twitter:description" content="自定义图片下载 from scrapy.pipelines.images import ImagesPipeline from scrapy.exceptions import DropItem import scrapy  class MyImagesPipeline(ImagesPipeline):     &amp;apos;&amp;apos;&amp;apos;自定义图片下载器,以图片url为路径保存图片&amp;ap">
@@ -381,6 +381,7 @@ class MyImagesPipeline(ImagesPipeline):
         image_guid = request.url
         return &apos;full/%s&apos; % (image_guid)
 </code></pre><p>以上代码放到scrapy项目中的pipelines文件中</p>
+<a id="more"></a>
 <pre><code>import os
 ITEM_PIPELINES = {
     #自定义的pipelines

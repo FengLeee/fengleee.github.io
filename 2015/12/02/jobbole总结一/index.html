@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="FengLeee">
 <meta property="og:description" content="Scrapy项目的 allowed_domains = [“blog.jobbole.com”] 不用加 http://scrapy.Request(url=article_url, callback=self.parse_article, meta={&amp;#39;front_image_url&amp;#39;: front_image_url} 没有follow(不是crawlSpider),通过cal">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-02T04:21:06.919Z">
+<meta property="og:updated_time" content="2017-08-02T04:42:55.272Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jobbole总结一">
 <meta name="twitter:description" content="Scrapy项目的 allowed_domains = [“blog.jobbole.com”] 不用加 http://scrapy.Request(url=article_url, callback=self.parse_article, meta={&amp;#39;front_image_url&amp;#39;: front_image_url} 没有follow(不是crawlSpider),通过cal">
@@ -371,6 +371,7 @@ tags_list = response.xpath(&quot;//p[@class=&apos;entry-meta-hide-on-mobile&apos
 tags_list = [element for element in tags_list if not element.encode(&apos;utf-8&apos;).strip().endswith(&apos;评论&apos;)]
 tags = &apos;,&apos;.join(tags_list)
 </code></pre><p>tags_list是一个Unicode字符数组,通过列表生成式 可以重新生成一个list去掉原list中以’评论’为结尾的字符<br>通过join方法可以连接list中的字符串</p>
+<a id="more"></a>
 <pre><code>item[&apos;title&apos;] = response.xpath(&quot;//div[@class=&apos;entry-header&apos;]/h1/text()&quot;).extract_first(&quot;&quot;)
 </code></pre><p><code>extract_first(&quot;&quot;)</code>比<code>extract[0]</code>好,当len(list)为0时不会发生index error,返回默认值<code>&quot;&quot;</code></p>
 <p>利用正则取出评论数字:</p>

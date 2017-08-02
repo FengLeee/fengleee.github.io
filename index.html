@@ -356,8 +356,7 @@
 
       
         
-          
-            <p>Item Loaders 提供了一个便利的机制来帮助 populating(填充) scrapted Items；虽然，Items 可以通过它类似 dict API 来填充，Item<br>Loaders 提供了更多便利的方法来进行 populates；<br>简而言之，Items 提供了被爬取数据的一个容器，而 Item Loaders 为该容器提供了 populating 的机制；<br>Item Loaders 的目的是为不同的 field 设计出更为高效、简单的可覆盖和可扩展的解析规则，可以用于不同的 spiders，以及不同的 source format (比如 HTML，XML 等等)，而不至于是维护编程噩梦；<br>看一个例子</p>
+          <p>Item Loaders 提供了一个便利的机制来帮助 populating(填充) scrapted Items；虽然，Items 可以通过它类似 dict API 来填充，Item<br>Loaders 提供了更多便利的方法来进行 populates；<br>简而言之，Items 提供了被爬取数据的一个容器，而 Item Loaders 为该容器提供了 populating 的机制；<br>Item Loaders 的目的是为不同的 field 设计出更为高效、简单的可覆盖和可扩展的解析规则，可以用于不同的 spiders，以及不同的 source format (比如 HTML，XML 等等)，而不至于是维护编程噩梦；<br>看一个例子</p>
 <pre><code>item_loader = MyItemLoader(item=ArticleSpiderItem(), response=response)
 item_loader.add_xpath(&apos;title&apos;, &quot;//div[@class=&apos;entry-header&apos;]/h1/text()&quot;)
 item_loader.add_xpath(&apos;create_date&apos;, &quot;//div[@class =&apos;entry-meta&apos;]/p/text()&quot;)
@@ -365,91 +364,14 @@ item_loader.add_value(&apos;url&apos;, response.url)
 item = item_loader.load_item()
 
         yield item
-</code></pre><p>最后，当所有的数据都已经收集好了以后，将会通过 [ItemLoader.load_item()] 将其转换为 Item 并返回；</p>
-<h2 id="Input-and-Output-processors"><a href="#Input-and-Output-processors" class="headerlink" title="Input and Output processors"></a><strong>Input and Output processors</strong></h2><p>Item Loader 为每个 Item Field 单独提供了一个 Input processor 和一个 Output processor；Input processor 一旦它通过 <code>add_xpath()</code>，<code>add_css()</code>，<code>add_value()</code>, 方法收到提取到的数据便会执行，执行以后所得到的数据将仍然保存在 ItemLoader 实例中；当数据收集完成以后，ItemLoader 通过 load_item() 方法来进行填充并返回以填充的 Item 实例；看下面这个例子.</p>
-<pre><code>l = ItemLoader(Product(), some_selector)
-l.add_xpath(&apos;name&apos;, xpath1) # (1)
-l.add_xpath(&apos;name&apos;, xpath2) # (2)
-l.add_css(&apos;name&apos;, css) # (3)
-l.add_value(&apos;name&apos;, &apos;test&apos;) # (4)
-return l.load_item() # (5)
-</code></pre><p>看看相关的执行过程，<br>数据已经通过xpath1提取，然后该数据将会传递给该name属性所对应的 Input processor(<strong>在item字段中声明</strong>)；Input processor 将会立即进行处理，但是处理的结果将仍然放置在 ItemLoader 中，并没有直接赋值给 Item)，数据已经通过xpath2提取，然后该数据将会传递给该 #1 的 Input processor (因为两者的属性都是name)；Input processor 处理的结果将会追加到 #1 的 data collected 中 (当前的 ItemLoader 中的一个对象)<br>和 #1 和 #2 基本上类同，唯一的区别是，它使用的是 CSS 选择器，使用相同的 Input processor，并且将处理结果追加到相同的 data collected 中；<br>该步没有使用任何的选择器，而是直接通过文本的方式追加；虽然不需要提取，但是该操作仍然需要通过上述的 Input processor 进行处理；在这个用例中，因为该值 ‘test’ 是不能被遍历的(iterable)，所以在传递给 Input processor 之前，要将其转换为 iterable 的对象，因为 Input processor 只接受 iterable；<br>将上面四个步骤所收集到的数据 data collected 传递给name属性所对应的 Output processor(<strong>在item字段中声明</strong>)；经过 Output processor 所处理的结果将会赋值给 Item 的name属性；</p>
-<h2 id="声明-Item-Loaders"><a href="#声明-Item-Loaders" class="headerlink" title="声明 Item Loaders"></a>声明 Item Loaders</h2><p>看一个例子，</p>
-<pre><code>from scrapy.loader import ItemLoader
-from scrapy.loader.processors import TakeFirst, MapCompose, Join
-
-class ProductLoader(ItemLoader):
-    default_output_processor = TakeFirst()
-    name_in = MapCompose(unicode.title)
-    name_out = Join()
-    price_in = MapCompose(unicode.strip)
-    # ...
-</code></pre><p>然后在spider parse方法中可导入ProductLoader类来代替ItemLoader进行实例化</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">item_loader = ProductLoader(item=Product(), response=response)</div></pre></td></tr></table></figure>
-<h2 id="有用的内置-processors"><a href="#有用的内置-processors" class="headerlink" title="有用的内置 processors"></a>有用的内置 processors</h2><p>Identity</p>
-<pre><code>class scrapy.loader.processors.Identity    
-</code></pre><p>最简单的一个 processor，并不做任何事情，它的功能只是将原有的值照原样输出；</p>
-<pre><code>&gt;&gt;&gt; from scrapy.loader.processors import Identity
-&gt;&gt;&gt; proc = Identity()
-&gt;&gt;&gt; proc([&apos;one&apos;, &apos;two&apos;, &apos;three&apos;])
-[&apos;one&apos;, &apos;two&apos;, &apos;three&apos;]
-</code></pre><p><strong>TakeFirst</strong></p>
-<pre><code>class scrapy.loader.processors.TakeFirst
-</code></pre><p>在一组数据当中返回第一个 not-null / not-empty 的数据，所以它的典型应用就是为一个 single-valued field 作为它的 Output processor；</p>
-<pre><code>&gt;&gt;&gt; from scrapy.loader.processors import TakeFirst
-&gt;&gt;&gt; proc = TakeFirst()
-&gt;&gt;&gt; proc([&apos;&apos;, &apos;one&apos;, &apos;two&apos;, &apos;three&apos;])
-&apos;one&apos;
-</code></pre><p><strong>Join(separator=u’ ‘)</strong></p>
-<pre><code>class scrapy.loader.processors.Join(separator=u&apos; &apos;)
-</code></pre><p>通过由构造函数所传入的分隔符来联合需要输出的数据值，默认的分割符是u’ ‘；当使用默认的分隔符，这个 processor 等价于使用 function, u’ ‘.join；</p>
-<pre><code>&gt;&gt;&gt; from scrapy.loader.processors import Join
-&gt;&gt;&gt; proc = Join()
-&gt;&gt;&gt; proc([&apos;one&apos;, &apos;two&apos;, &apos;three&apos;])
-u&apos;one two three&apos;
-&gt;&gt;&gt; proc = Join(&apos;&lt;br&gt;&apos;)
-&gt;&gt;&gt; proc([&apos;one&apos;, &apos;two&apos;, &apos;three&apos;])
-u&apos;one&lt;br&gt;two&lt;br&gt;three&apos;
-</code></pre><p><strong>Compose(functions, <em>default_loader_context)</em></strong></p>
-<pre><code>class scrapy.loader.processors.Compose(*functions, **default_loader_context)
-</code></pre><p>Compose processor 在上述例子中被普遍的用到，可想而知它的重要性了；该 processor 是由指定的一系列的 functions 所构成的，也就是说，第一个 functions 接收原始输入数据，然后将处理结果发送给下一个 function，下一个 function 将处理结果再发送至下一个 function，直到，最后一个 function 将处理结果输出；默认情况下，整个传递过程将会在遇到None值以后既停止；不过这个行为可以在构造 Compose 的时候通过关键字参数stop_on_none=False将其停止；<br>看一个简单的例子，</p>
-<pre><code>&gt;&gt;&gt; from scrapy.loader.processors import Compose
-&gt;&gt;&gt; proc = Compose(lambda v: v[0], str.upper)
-&gt;&gt;&gt; proc([&apos;hello&apos;, &apos;world&apos;])
-&apos;HELLO&apos;
-</code></pre><p>很简单，通过Compose的构造函数传参了两个 Function，第一个方法是取队列中的第一个元素值，第二个方法是将该元素值变为大写；<br>另外，每一个 function 可以通过通过参数loader_context接收 Item Loader Context 实例；<br>在构造 Compose 的时候，通过构造函数所传递的关键字参数将会被当做默认的 Loader context values 并将其传递到每一个 function 的调用过程中；</p>
-<p><strong>MapCompose(functions, <em>default_loader_context)</em></strong></p>
-<pre><code>class scrapy.loader.processors.MapCompose(*functions, **default_loader_context)
-</code></pre><p>同Compose processor 类似，它也是由一组 functions 所构造而成；区别是，内部的结果将会在多个 functions 中传递，执行规则如下，<br>该 processor 的输入数据类型必须是 iterable (言外之意，输入值是一个队列 AA)，第一个 function 将会作用到该队列中 AA 的每一个元素上；然后将每一个元素的输出值(如果有的话)再次进行级联(concatenated)并生成一个新的 iterable (记为队列 BB)，然后队列 BB 中的每一个元素将会作用到第三个 function 上；然后将输出值再进行级联，并生成一个新的 iterable … 就这样，以此类推，直到调用最后一个 function 并得到相应的 iterable 作为结果返回；<br>如果调用过程中，针对某一个输入元素的 function 返回的是None，那么它的值将会被自动忽略，并不会成为下一次级联的输入元素；<br>正式因为每一次 function 调用都是作用到所有的输入元素上，所以，它经常被作为 Input processor 使用，因为数据经常是通过 SelectorList( selectors ) 的方法 extract() 进行提取的，因此，一个 MapCompose 便可以作用在 selectors 所返回的 values 上面，非常方便，看一个例子，</p>
-<pre><code>&gt;&gt;&gt; def filter_world(x):
-...     return None if x == &apos;world&apos; else x
-...
-&gt;&gt;&gt; from scrapy.loader.processors import MapCompose
-&gt;&gt;&gt; proc = MapCompose(filter_world, unicode.upper)
-&gt;&gt;&gt; proc([u&apos;hello&apos;, u&apos;world&apos;, u&apos;this&apos;, u&apos;is&apos;, u&apos;scrapy&apos;])
-[u&apos;HELLO&apos;, u&apos;THIS&apos;, u&apos;IS&apos;, u&apos;SCRAPY&apos;]
-</code></pre><p>简单的描述一下上面的这个例子，通过两个 functions 作为参数来通过构造函数构造一个MapCompose processor，第一个 function 当输入值是 ‘world’ 的时候，返回None，第二个 function 将返回结果进行大写转换；那么第一轮执行过程中，因为 ‘world’ 元素经过 filter_world() 调用有返回None所以被过滤掉了，第二轮将返回剩余三个元素的大写输出；</p>
-<p><strong>SelectJmes(json_path)*</strong></p>
-<pre><code>class scrapy.loader.processors.SelectJmes(json_path)
-</code></pre><p>Queries the value using the json path provided to the constructor and returns the output. Requires jmespath (<a href="https://github.com/jmespath/jmespath.py" target="_blank" rel="external">https://github.com/jmespath/jmespath.py</a>) to run. This processor takes only one input at a time.<br>可以在 lists 或者 dict 上使用</p>
-<pre><code>&gt;&gt;&gt; from scrapy.loader.processors import SelectJmes, Compose, MapCompose
-&gt;&gt;&gt; proc = SelectJmes(&quot;foo&quot;) #for direct use on lists and dictionaries
-&gt;&gt;&gt; proc({&apos;foo&apos;: &apos;bar&apos;})
-&apos;bar&apos;
-&gt;&gt;&gt; proc({&apos;foo&apos;: {&apos;bar&apos;: &apos;baz&apos;}})
-{&apos;bar&apos;: &apos;baz&apos;}
-使用到 JSON string 上
-&gt;&gt;&gt; import json
-&gt;&gt;&gt; proc_single_json_str = Compose(json.loads, SelectJmes(&quot;foo&quot;))
-&gt;&gt;&gt; proc_single_json_str(&apos;{&quot;foo&quot;: &quot;bar&quot;}&apos;)
-u&apos;bar&apos;
-&gt;&gt;&gt; proc_json_list = Compose(json.loads, MapCompose(SelectJmes(&apos;foo&apos;)))
-&gt;&gt;&gt; proc_json_list(&apos;[{&quot;foo&quot;:&quot;bar&quot;}, {&quot;baz&quot;:&quot;tar&quot;}]&apos;)
-[u&apos;bar&apos;]
-</code></pre><p>注意，这里好玩的是第二个 Compose 构造器，第一个构造参数是一个普通的函数，但是注意第二个构造参数，是一个通过 SelectJmes() 作为构造参数所构造的MapCompose对象；那么我们来简单的分析一下它的执行流程，首先，输入的 json string 将会分别作用到这两个方法中，第一个是 json.loads 方法，将会把输入的 json string输入值拆分成两个键值元素的队列 LL，然后该队列将会作为第一个 function 的输出传递给 MapCompose 对象，因为 MapCompose 是一个 processor，所以将会按照该 processor 的特性对输入值进行处理，这里根据MapCompose的特性，会将队列 LL 里面的所有元素分别作用于方法 SelectJmes(‘foo’)，所以，只有 {“foo”:”bar”} 元素与之匹配，因此输出的是 ‘bar’；<br>上面的例子中描述了一种特殊的 processor 调用情况，那就是 processor 中嵌入另外一个 processor，感觉这是一个比较重要的特性，可以针对这个特性单独再写出一个小节出来单独描述；<br>我的总结<br>Item Loader 的设计目的就是尽最大的可能性为所爬去的元素定义可扩展的规则，转换规则，并且通过重载 Item Loader 的方式能够最大限度的重用这些规则；使得当爬虫项目日益庞大以后，在运维上是可控的；<br>下一步要做的就是，写一个完整的例子，从前往后全部将其串通理解；</p>
-<p>转载自: <a href="http://www.shangyang.me/2017/07/23/scrapy-learning-7-item-loaders/" target="_blank" rel="external">http://www.shangyang.me/2017/07/23/scrapy-learning-7-item-loaders/</a></p>
-
-          
+</code></pre><p>最后，当所有的数据都已经收集好了以后，将会通过 [ItemLoader.load_item()] 将其转换为 Item 并返回；<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/12/02/scrapy中的item_loader/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -589,8 +511,7 @@ u&apos;bar&apos;
 
       
         
-          
-            <p>自定义图片下载</p>
+          <p>自定义图片下载</p>
 <pre><code>from scrapy.pipelines.images import ImagesPipeline
 from scrapy.exceptions import DropItem
 import scrapy
@@ -616,20 +537,13 @@ class MyImagesPipeline(ImagesPipeline):
         image_guid = request.url
         return &apos;full/%s&apos; % (image_guid)
 </code></pre><p>以上代码放到scrapy项目中的pipelines文件中</p>
-<pre><code>import os
-ITEM_PIPELINES = {
-    #自定义的pipelines
-    &apos;articleSpider.pipelines.MyImagesPipeline&apos;: 300,
-}
-#自定义存储imageurl的字段,item[&quot;front_image_url&quot;]
-IMAGES_URL_FILED = &quot;front_image_url&quot;
-#工程根目录
-project_dir = os.path.dirname(__file__)
-#下载图片存储位置
-IMAGES_STORE = os.path.join(project_dir, &apos;images&apos;)
-</code></pre><p>重写ImagesPipeline后还要在setting中进行配置</p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/08/02/重写scrapy.pipelines.images.ImagesPipeline方法实现自定义图片下载/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -769,8 +683,7 @@ IMAGES_STORE = os.path.join(project_dir, &apos;images&apos;)
 
       
         
-          
-            <p>单线程阻塞操作MySQL</p>
+          <p>单线程阻塞操作MySQL</p>
 <pre><code>import MySQLdb
 class MysqlPipeline(object):
     def __init__(self):
@@ -790,58 +703,14 @@ class MysqlPipeline(object):
         #接收结束信号
         self.conn.close()
         print &apos;完成数据插入&apos;
-</code></pre><p>利用scrapy中的Twisted框架完成异步操作MySQL</p>
-<pre><code>from twisted.enterprise import adbapi
-import MySQLdb.cursors
-class MysqlTwistedPipeline(object):
-
-    def __init__(self, dbpoll):
-        self.dbpoll = dbpoll
-        self.file = open(&apos;mysql_error.json&apos;, &apos;w&apos;)
-
-    @classmethod
-    def from_settings(cls, settings):
-    #会被scrapy调用的类方法,返回一个dbpoll对象传递给MysqlTwistedPipeline类,构建新实例
-        dbparams = dict(host = settings[&apos;MYSQL_HOST&apos;],
-                        db = settings[&apos;MYSQL_DBNAME&apos;],
-                        user = settings[&apos;MYSQL_USER&apos;],
-                        passwd = settings[&apos;MYSQL_PASSWORD&apos;],
-                        charset = &apos;utf8mb4&apos;,
-                        use_unicode = True,
-                        cursorclass = MySQLdb.cursors.DictCursor
-                        )
-        #第一个参数,操作的数据库,利用反射原理,第二个参数MySQL初始化的一些参数,格式固定
-        dbpoll = adbapi.ConnectionPool(&apos;MySQLdb&apos;, **dbparams)
-        #返货一个MysqlTwistedPipeline的实例对象
-        return cls(dbpoll)
-
-    def process_item(self, item, spider):
-        #处理item 通过runInteraction执行异步操作,第一个参数是具体的操作过程,第二个参数是操作数据
-        #并返回一个query,query是Deferred类的实例,调用其中的addErrback方法处理异常
-        query = self.dbpoll.runInteraction(self.do_insert, item)
-        query.addErrback(self.handle_error, item, spider)
-        return item
-
-    def handle_error(self, failure, item , spider ):
-        #处理MySQL异常 ,异常写入mysql_error.json文件中
-        item[&apos;create_date&apos;] = str(item[&apos;create_date&apos;])
-        error_json = json.dumps(dict(item), ensure_ascii=False)
-        self.file.write(error_json.encode(&apos;utf-8&apos;)+&apos;\n&apos;+(str(failure))+&apos;\n&apos;)
-        print (failure)
-
-    def do_insert(self, cursor, item):
-        #执行MySQL语句
-        insert_sql = &quot;&quot;&quot;
-                  insert into dbname(Field,Field)VALUES (%s, %s)
-              &quot;&quot;&quot;
-        cursor.execute(insert_sql, (value,value))
-
-    def close_spider(self, spider):
-        self.file.close()
-        print &apos;完成mysql_error写入&apos;
-</code></pre><p>其中 charset = ‘utf8mb4’可解决MySQL不能存储特殊表情的问题, 在表结构和MySQL初始化中同时设置即可</p>
-
-          
+</code></pre>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/05/02/pipeline中MySQL存储方式/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -981,8 +850,7 @@ class MysqlTwistedPipeline(object):
 
       
         
-          
-            <p>Scrapy项目的 allowed_domains = [“blog.jobbole.com”] 不用加 http://<br><code>scrapy.Request(url=article_url, callback=self.parse_article, meta={&#39;front_image_url&#39;: front_image_url}</code></p>
+          <p>Scrapy项目的 allowed_domains = [“blog.jobbole.com”] 不用加 http://<br><code>scrapy.Request(url=article_url, callback=self.parse_article, meta={&#39;front_image_url&#39;: front_image_url}</code></p>
 <p>没有follow(不是crawlSpider),通过callback调用解析函数,meta可以通过Request将数据通过Response传递到解析函数, 可用item[‘front_image_url’] = [response.meta.get(‘front_image_url’, ‘’)]获得,没有则返回’’.</p>
 <pre><code>article_div = response.xpath(&apos;//div[@id=&quot;archive&quot;]/div[@class=&quot;post floated-thumb&quot;]&apos;)
         # xpath返回的selector对象可以直接遍历
@@ -998,25 +866,13 @@ tags_list = response.xpath(&quot;//p[@class=&apos;entry-meta-hide-on-mobile&apos
 tags_list = [element for element in tags_list if not element.encode(&apos;utf-8&apos;).strip().endswith(&apos;评论&apos;)]
 tags = &apos;,&apos;.join(tags_list)
 </code></pre><p>tags_list是一个Unicode字符数组,通过列表生成式 可以重新生成一个list去掉原list中以’评论’为结尾的字符<br>通过join方法可以连接list中的字符串</p>
-<pre><code>item[&apos;title&apos;] = response.xpath(&quot;//div[@class=&apos;entry-header&apos;]/h1/text()&quot;).extract_first(&quot;&quot;)
-</code></pre><p><code>extract_first(&quot;&quot;)</code>比<code>extract[0]</code>好,当len(list)为0时不会发生index error,返回默认值<code>&quot;&quot;</code></p>
-<p>利用正则取出评论数字:</p>
-<pre><code>comment_nums = response.xpath(&quot;//div[@class=&apos;post-adds&apos;]/a/span/text()&quot;).extract_first(&apos;&apos;)
-match_re = re.match(&apos;.*?(\d+).*&apos;, comment_nums)
-    if match_re:
-        comment_nums = match_re.group(1)
-    else:
-        comment_nums = 0
-</code></pre><p>在项目目录下建立main文件  可以用来调试scrapy</p>
-<pre><code>from scrapy.cmdline import execute
-
-import sys
-import os
-
-sys.path.append(os.path.dirname(__file__))
-execute([&quot;scrapy&quot;, &quot;crawl&quot;, &quot;jobbole&quot;])
-</code></pre>
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2015/12/02/jobbole总结一/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>

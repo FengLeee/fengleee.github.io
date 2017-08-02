@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="FengLeee">
 <meta property="og:description" content="单线程阻塞操作MySQL import MySQLdb class MysqlPipeline(object):     def __init__(self):         self.conn = MySQLdb.connect(&amp;apos;host&amp;apos;, &amp;apos;user&amp;apos;, &amp;apos;passwd&amp;apos;, &amp;apos;dbname&amp;apos;, charset">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-02T04:22:03.903Z">
+<meta property="og:updated_time" content="2017-08-02T04:51:19.623Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pipeline中MySQL存储方式">
 <meta name="twitter:description" content="单线程阻塞操作MySQL import MySQLdb class MysqlPipeline(object):     def __init__(self):         self.conn = MySQLdb.connect(&amp;apos;host&amp;apos;, &amp;apos;user&amp;apos;, &amp;apos;passwd&amp;apos;, &amp;apos;dbname&amp;apos;, charset">
@@ -375,7 +375,8 @@ class MysqlPipeline(object):
         #接收结束信号
         self.conn.close()
         print &apos;完成数据插入&apos;
-</code></pre><p>利用scrapy中的Twisted框架完成异步操作MySQL</p>
+</code></pre><a id="more"></a>
+<p>利用scrapy中的Twisted框架完成异步操作MySQL</p>
 <pre><code>from twisted.enterprise import adbapi
 import MySQLdb.cursors
 class MysqlTwistedPipeline(object):
