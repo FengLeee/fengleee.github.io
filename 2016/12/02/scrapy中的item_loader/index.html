@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="scrapy," />
 
 
 
@@ -87,13 +87,18 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="FengLeee">
-<meta property="og:url" content="http://FengLeee.github.io/index.html">
+<meta name="description" content="Item Loaders 提供了一个便利的机制来帮助 populating(填充) scrapted Items；虽然，Items 可以通过它类似 dict API 来填充，ItemLoaders 提供了更多便利的方法来进行 populates；简而言之，Items 提供了被爬取数据的一个容器，而 Item Loaders 为该容器提供了 populating 的机制；Item Loaders 的">
+<meta name="keywords" content="scrapy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="scrapy中的item_loader">
+<meta property="og:url" content="http://FengLeee.github.io/2016/12/02/scrapy中的item_loader/index.html">
 <meta property="og:site_name" content="FengLeee">
+<meta property="og:description" content="Item Loaders 提供了一个便利的机制来帮助 populating(填充) scrapted Items；虽然，Items 可以通过它类似 dict API 来填充，ItemLoaders 提供了更多便利的方法来进行 populates；简而言之，Items 提供了被爬取数据的一个容器，而 Item Loaders 为该容器提供了 populating 的机制；Item Loaders 的">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-08-02T04:22:22.606Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="FengLeee">
+<meta name="twitter:title" content="scrapy中的item_loader">
+<meta name="twitter:description" content="Item Loaders 提供了一个便利的机制来帮助 populating(填充) scrapted Items；虽然，Items 可以通过它类似 dict API 来填充，ItemLoaders 提供了更多便利的方法来进行 populates；简而言之，Items 提供了被爬取数据的一个容器，而 Item Loaders 为该容器提供了 populating 的机制；Item Loaders 的">
 
 
 
@@ -121,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="http://FengLeee.github.io/"/>
+  <link rel="canonical" href="http://FengLeee.github.io/2016/12/02/scrapy中的item_loader/"/>
 
 
 
 
 
-  <title> FengLeee </title>
+  <title> scrapy中的item_loader | FengLeee </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -152,9 +157,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-   page-home 
- ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -247,9 +250,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -279,10 +282,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2016/12/02/scrapy中的item_loader/" itemprop="url">
-                  scrapy中的item_loader
-                </a>
+                scrapy中的item_loader
               
             
           </h1>
@@ -355,9 +355,7 @@
       
 
       
-        
-          
-            <p>Item Loaders 提供了一个便利的机制来帮助 populating(填充) scrapted Items；虽然，Items 可以通过它类似 dict API 来填充，Item<br>Loaders 提供了更多便利的方法来进行 populates；<br>简而言之，Items 提供了被爬取数据的一个容器，而 Item Loaders 为该容器提供了 populating 的机制；<br>Item Loaders 的目的是为不同的 field 设计出更为高效、简单的可覆盖和可扩展的解析规则，可以用于不同的 spiders，以及不同的 source format (比如 HTML，XML 等等)，而不至于是维护编程噩梦；<br>看一个例子</p>
+        <p>Item Loaders 提供了一个便利的机制来帮助 populating(填充) scrapted Items；虽然，Items 可以通过它类似 dict API 来填充，Item<br>Loaders 提供了更多便利的方法来进行 populates；<br>简而言之，Items 提供了被爬取数据的一个容器，而 Item Loaders 为该容器提供了 populating 的机制；<br>Item Loaders 的目的是为不同的 field 设计出更为高效、简单的可覆盖和可扩展的解析规则，可以用于不同的 spiders，以及不同的 source format (比如 HTML，XML 等等)，而不至于是维护编程噩梦；<br>看一个例子</p>
 <pre><code>item_loader = MyItemLoader(item=ArticleSpiderItem(), response=response)
 item_loader.add_xpath(&apos;title&apos;, &quot;//div[@class=&apos;entry-header&apos;]/h1/text()&quot;)
 item_loader.add_xpath(&apos;create_date&apos;, &quot;//div[@class =&apos;entry-meta&apos;]/p/text()&quot;)
@@ -449,609 +447,72 @@ u&apos;bar&apos;
 </code></pre><p>注意，这里好玩的是第二个 Compose 构造器，第一个构造参数是一个普通的函数，但是注意第二个构造参数，是一个通过 SelectJmes() 作为构造参数所构造的MapCompose对象；那么我们来简单的分析一下它的执行流程，首先，输入的 json string 将会分别作用到这两个方法中，第一个是 json.loads 方法，将会把输入的 json string输入值拆分成两个键值元素的队列 LL，然后该队列将会作为第一个 function 的输出传递给 MapCompose 对象，因为 MapCompose 是一个 processor，所以将会按照该 processor 的特性对输入值进行处理，这里根据MapCompose的特性，会将队列 LL 里面的所有元素分别作用于方法 SelectJmes(‘foo’)，所以，只有 {“foo”:”bar”} 元素与之匹配，因此输出的是 ‘bar’；<br>上面的例子中描述了一种特殊的 processor 调用情况，那就是 processor 中嵌入另外一个 processor，感觉这是一个比较重要的特性，可以针对这个特性单独再写出一个小节出来单独描述；<br>我的总结<br>Item Loader 的设计目的就是尽最大的可能性为所爬去的元素定义可扩展的规则，转换规则，并且通过重载 Item Loader 的方式能够最大限度的重用这些规则；使得当爬虫项目日益庞大以后，在运维上是可控的；<br>下一步要做的就是，写一个完整的例子，从前往后全部将其串通理解；</p>
 <p>转载自: <a href="http://www.shangyang.me/2017/07/23/scrapy-learning-7-item-loaders/" target="_blank" rel="external">http://www.shangyang.me/2017/07/23/scrapy-learning-7-item-loaders/</a></p>
 
-          
+      
+    </div>
+
+    <div>
+      
         
+
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
     <div>
+      
+        
+
       
     </div>
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2016/08/02/重写scrapy.pipelines.images.ImagesPipeline方法实现自定义图片下载/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FengLeee">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FengLeee">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/02/重写scrapy.pipelines.images.ImagesPipeline方法实现自定义图片下载/" itemprop="url">
-                  重写scrapy.pipelines.images.ImagesPipeline方法实现自定义图片下载
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-02T21:21:14+08:00">
-                2016-08-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/scrapy/" itemprop="url" rel="index">
-                    <span itemprop="name">scrapy</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/scrapy/" rel="tag"># scrapy</a>
           
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
         
-          
-            <p>自定义图片下载</p>
-<pre><code>from scrapy.pipelines.images import ImagesPipeline
-from scrapy.exceptions import DropItem
-import scrapy
-
-class MyImagesPipeline(ImagesPipeline):
-    &apos;&apos;&apos;自定义图片下载器,以图片url为路径保存图片&apos;&apos;&apos;
-    def get_media_requests(self, item, info):
-    &apos;&apos;&apos;发生图片下载请求,其中item[&apos;front_image_url&apos;]字段是scrapy中我们自定义的url字段,
-    以数组的方式存储,遍历数组请求图片&apos;&apos;&apos;
-        for image_url in item[&apos;front_image_url&apos;]:
-            yield scrapy.Request(image_url)
-
-    def item_completed(self, results, item, info):
-    &apos;&apos;&apos;results是一个list 第一个为图片下载状态,对应OK  第二个是一个tupled其中可以为path的字段对应存储路径,而item[&apos;front_image_path&apos;]是我们自定义字段,保存在item中&apos;&apos;&apos;
-        front_image_path = [x[&apos;path&apos;] for ok, x in results if ok]
-        if not front_image_path:
-            raise DropItem(&quot;Item contains no images&quot;)
-        item[&apos;front_image_path&apos;] = front_image_path
-        return item
-
-    def file_path(self, request, response=None, info=None):
-    &apos;&apos;&apos;自定义图片保存路径,以图片的url保存,重写前是图片的url经过MD5编码后存储&apos;&apos;&apos;
-        image_guid = request.url
-        return &apos;full/%s&apos; % (image_guid)
-</code></pre><p>以上代码放到scrapy项目中的pipelines文件中</p>
-<pre><code>import os
-ITEM_PIPELINES = {
-    #自定义的pipelines
-    &apos;articleSpider.pipelines.MyImagesPipeline&apos;: 300,
-}
-#自定义存储imageurl的字段,item[&quot;front_image_url&quot;]
-IMAGES_URL_FILED = &quot;front_image_url&quot;
-#工程根目录
-project_dir = os.path.dirname(__file__)
-#下载图片存储位置
-IMAGES_STORE = os.path.join(project_dir, &apos;images&apos;)
-</code></pre><p>重写ImagesPipeline后还要在setting中进行配置</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
       
 
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2016/05/02/pipeline中MySQL存储方式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FengLeee">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FengLeee">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
+              <a href="/2016/08/02/重写scrapy.pipelines.images.ImagesPipeline方法实现自定义图片下载/" rel="next" title="重写scrapy.pipelines.images.ImagesPipeline方法实现自定义图片下载">
+                <i class="fa fa-chevron-left"></i> 重写scrapy.pipelines.images.ImagesPipeline方法实现自定义图片下载
+              </a>
             
-              
-                
-                <a class="post-title-link" href="/2016/05/02/pipeline中MySQL存储方式/" itemprop="url">
-                  pipeline中MySQL存储方式
-                </a>
-              
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-02T00:21:14+08:00">
-                2016-05-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/scrapy/" itemprop="url" rel="index">
-                    <span itemprop="name">scrapy</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <p>单线程阻塞操作MySQL</p>
-<pre><code>import MySQLdb
-class MysqlPipeline(object):
-    def __init__(self):
-        self.conn = MySQLdb.connect(&apos;host&apos;, &apos;user&apos;, &apos;passwd&apos;, &apos;dbname&apos;, charset=&quot;utf8&quot;, use_unicode=True)
-        self.cursor = self.conn.cursor()
-
-    def process_item(self, item, spider):
-        insert_sql = &quot;&quot;&quot;
-                  insert into dbname(Field,Field)VALUES (%s, %s)
-              &quot;&quot;&quot;
-        self.cursor.execute(insert_sql, (value,value))
-        self.conn.commit()
-        print &apos;正在插入数据&apos;
-        return item
-
-    def close_spider(self, spider):
-        #接收结束信号
-        self.conn.close()
-        print &apos;完成数据插入&apos;
-</code></pre><p>利用scrapy中的Twisted框架完成异步操作MySQL</p>
-<pre><code>from twisted.enterprise import adbapi
-import MySQLdb.cursors
-class MysqlTwistedPipeline(object):
-
-    def __init__(self, dbpoll):
-        self.dbpoll = dbpoll
-        self.file = open(&apos;mysql_error.json&apos;, &apos;w&apos;)
-
-    @classmethod
-    def from_settings(cls, settings):
-    #会被scrapy调用的类方法,返回一个dbpoll对象传递给MysqlTwistedPipeline类,构建新实例
-        dbparams = dict(host = settings[&apos;MYSQL_HOST&apos;],
-                        db = settings[&apos;MYSQL_DBNAME&apos;],
-                        user = settings[&apos;MYSQL_USER&apos;],
-                        passwd = settings[&apos;MYSQL_PASSWORD&apos;],
-                        charset = &apos;utf8mb4&apos;,
-                        use_unicode = True,
-                        cursorclass = MySQLdb.cursors.DictCursor
-                        )
-        #第一个参数,操作的数据库,利用反射原理,第二个参数MySQL初始化的一些参数,格式固定
-        dbpoll = adbapi.ConnectionPool(&apos;MySQLdb&apos;, **dbparams)
-        #返货一个MysqlTwistedPipeline的实例对象
-        return cls(dbpoll)
-
-    def process_item(self, item, spider):
-        #处理item 通过runInteraction执行异步操作,第一个参数是具体的操作过程,第二个参数是操作数据
-        #并返回一个query,query是Deferred类的实例,调用其中的addErrback方法处理异常
-        query = self.dbpoll.runInteraction(self.do_insert, item)
-        query.addErrback(self.handle_error, item, spider)
-        return item
-
-    def handle_error(self, failure, item , spider ):
-        #处理MySQL异常 ,异常写入mysql_error.json文件中
-        item[&apos;create_date&apos;] = str(item[&apos;create_date&apos;])
-        error_json = json.dumps(dict(item), ensure_ascii=False)
-        self.file.write(error_json.encode(&apos;utf-8&apos;)+&apos;\n&apos;+(str(failure))+&apos;\n&apos;)
-        print (failure)
-
-    def do_insert(self, cursor, item):
-        #执行MySQL语句
-        insert_sql = &quot;&quot;&quot;
-                  insert into dbname(Field,Field)VALUES (%s, %s)
-              &quot;&quot;&quot;
-        cursor.execute(insert_sql, (value,value))
-
-    def close_spider(self, spider):
-        self.file.close()
-        print &apos;完成mysql_error写入&apos;
-</code></pre><p>其中 charset = ‘utf8mb4’可解决MySQL不能存储特殊表情的问题, 在表结构和MySQL初始化中同时设置即可</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2015/12/02/jobbole总结一/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FengLeee">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FengLeee">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/12/02/jobbole总结一/" itemprop="url">
-                  jobbole总结一
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-12-02T21:40:14+08:00">
-                2015-12-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/scrapy/" itemprop="url" rel="index">
-                    <span itemprop="name">scrapy</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Scrapy项目的 allowed_domains = [“blog.jobbole.com”] 不用加 http://<br><code>scrapy.Request(url=article_url, callback=self.parse_article, meta={&#39;front_image_url&#39;: front_image_url}</code></p>
-<p>没有follow(不是crawlSpider),通过callback调用解析函数,meta可以通过Request将数据通过Response传递到解析函数, 可用item[‘front_image_url’] = [response.meta.get(‘front_image_url’, ‘’)]获得,没有则返回’’.</p>
-<pre><code>article_div = response.xpath(&apos;//div[@id=&quot;archive&quot;]/div[@class=&quot;post floated-thumb&quot;]&apos;)
-        # xpath返回的selector对象可以直接遍历
-        for div in article_div:
-            article_url = div.xpath(&apos;./div[@class=&quot;post-meta&quot;]/p/a/@href&apos;).extract()[0]
-            front_image_url = div.xpath(&apos;./div[@class=&quot;post-thumb&quot;]/a/img/@src&apos;).extract()[0]
-            print article_url
-            print front_image_url
-
-            yield scrapy.Request(url=article_url, callback=self.parse_article, meta={&apos;front_image_url&apos;: front_image_url})
-
-tags_list = response.xpath(&quot;//p[@class=&apos;entry-meta-hide-on-mobile&apos;]/a/text()&quot;).extract()
-tags_list = [element for element in tags_list if not element.encode(&apos;utf-8&apos;).strip().endswith(&apos;评论&apos;)]
-tags = &apos;,&apos;.join(tags_list)
-</code></pre><p>tags_list是一个Unicode字符数组,通过列表生成式 可以重新生成一个list去掉原list中以’评论’为结尾的字符<br>通过join方法可以连接list中的字符串</p>
-<pre><code>item[&apos;title&apos;] = response.xpath(&quot;//div[@class=&apos;entry-header&apos;]/h1/text()&quot;).extract_first(&quot;&quot;)
-</code></pre><p><code>extract_first(&quot;&quot;)</code>比<code>extract[0]</code>好,当len(list)为0时不会发生index error,返回默认值<code>&quot;&quot;</code></p>
-<p>利用正则取出评论数字:</p>
-<pre><code>comment_nums = response.xpath(&quot;//div[@class=&apos;post-adds&apos;]/a/span/text()&quot;).extract_first(&apos;&apos;)
-match_re = re.match(&apos;.*?(\d+).*&apos;, comment_nums)
-    if match_re:
-        comment_nums = match_re.group(1)
-    else:
-        comment_nums = 0
-</code></pre><p>在项目目录下建立main文件  可以用来调试scrapy</p>
-<pre><code>from scrapy.cmdline import execute
-
-import sys
-import os
-
-sys.path.append(os.path.dirname(__file__))
-execute([&quot;scrapy&quot;, &quot;crawl&quot;, &quot;jobbole&quot;])
-</code></pre>
-          
-        
+    <div class="post-spread">
       
     </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-  </section>
-
-  
+  </div>
 
 
           </div>
@@ -1059,6 +520,10 @@ execute([&quot;scrapy&quot;, &quot;crawl&quot;, &quot;jobbole&quot;])
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -1078,8 +543,17 @@ execute([&quot;scrapy&quot;, &quot;crawl&quot;, &quot;jobbole&quot;])
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -1141,6 +615,22 @@ execute([&quot;scrapy&quot;, &quot;crawl&quot;, &quot;jobbole&quot;])
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Input-and-Output-processors"><span class="nav-number">1.</span> <span class="nav-text">Input and Output processors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#声明-Item-Loaders"><span class="nav-number">2.</span> <span class="nav-text">声明 Item Loaders</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#有用的内置-processors"><span class="nav-number">3.</span> <span class="nav-text">有用的内置 processors</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1248,6 +738,10 @@ execute([&quot;scrapy&quot;, &quot;crawl&quot;, &quot;jobbole&quot;])
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
 
   
 
