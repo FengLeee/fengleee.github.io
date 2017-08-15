@@ -296,6 +296,313 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2017/08/04/知乎之问题记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengLeee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FengLeee">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/08/04/知乎之问题记录/" itemprop="url">
+                  知乎爬虫之问题记录
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-04T19:09:51+08:00">
+                2017-08-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/知乎爬虫/" itemprop="url" rel="index">
+                    <span itemprop="name">知乎爬虫</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h4 id="记录爬取知乎过程中遇到的问题-："><a href="#记录爬取知乎过程中遇到的问题-：" class="headerlink" title="记录爬取知乎过程中遇到的问题 ："></a>记录爬取知乎过程中遇到的问题 ：</h4><ol>
+<li><p>验证码问题:模拟知乎登陆时，知乎采用汉字验证码．破解汉字验证码比较难，于是通过分析找出英文验证码对应的URL和form字段</p>
+<pre><code>英文验证码的url：&apos;https://www.zhihu.com/captcha.gif?r=1501839818639&amp;type=login&apos;和目前知乎用的
+url：&quot;https://www.zhihu.com/captcha.gif?r=1501839818639&amp;type=login&amp;lang=cn&quot;是不一样的．我们去掉了lang=cn字段
+这样返回给我们的验证码就是普通的英文验证码，修改验证码类型后，在form表单中也要更改相应的验证码类型，&apos;captcha_type&apos;: &apos;cn&apos;,
+改为&apos;captcha_type&apos;: &apos;en&apos;,
+
+captcha_time = str(time.time()).split(&apos;.&apos;)[0]+str(time.clock()).split(&apos;.&apos;)[1][:3]
+captcha_url = &apos;https://www.zhihu.com/captcha.gif?r={0}&amp;type=login&apos;.format(captcha_time)
+form_data = {
+        &apos;_xsrf&apos;: get_xsrf(),
+        &apos;password&apos;: passwd,
+        &apos;captcha&apos;: get_captcha(),
+        &apos;captcha_type&apos;: &apos;en&apos;,
+        &apos;email&apos;: account
+    }
+</code></pre><p>这样我们post form_data字段就能成功登陆了</p>
+</li>
+</ol>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/08/04/知乎之问题记录/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2017/04/04/CrawlSpider源码详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengLeee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FengLeee">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/04/CrawlSpider源码详解/" itemprop="url">
+                  CrawlSpider源码详解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-04T19:09:51+08:00">
+                2017-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读源码/" itemprop="url" rel="index">
+                    <span itemprop="name">读源码</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2016/12/02/scrapy中的item_loader/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -410,6 +717,465 @@ item = item_loader.load_item()
             </a>
           </div>
           <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2016/11/14/Selenium之定位不到元素常见原因及解决办法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengLeee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FengLeee">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/11/14/Selenium之定位不到元素常见原因及解决办法/" itemprop="url">
+                  Selenium之定位不到元素常见原因及解决办法（报：NoSuchElementException）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-14T22:09:51+08:00">
+                2016-11-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/selenium/" itemprop="url" rel="index">
+                    <span itemprop="name">selenium</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><strong>Frame/Iframe原因定位不到元素：</strong></p>
+<p>　　这个是最常见的原因，首先要理解下frame的实质，frame中实际上是嵌入了另一个页面，而webdriver每次只能在一个页面识别，因此需要先定位到相应的frame，对那个页面里的元素进行定位。解决方案：如果iframe有name或id的话，直接使用<code>switch_to_frame(&quot;name值&quot;)或switch_to_frame(&quot;id值&quot;)</code>。如下：</p>
+<pre><code>driver=webdriver.Firefox()
+driver.get(r&apos;http://www.126.com/&apos;)
+driver.switch_to_frame(&apos;x-URS-iframe&apos;)  #需先跳转到iframe框架
+username=driver.find_element_by_name(&apos;email&apos;)
+username.clear()
+</code></pre><p>通常采用id和name就能够解决绝大多数问题。但有时候frame并无这两项属性，<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/11/14/Selenium之定位不到元素常见原因及解决办法/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2016/11/04/Selenium之三种等待方式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengLeee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FengLeee">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/11/04/Selenium之三种等待方式/" itemprop="url">
+                  Selenium之三种等待方式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-04T22:09:51+08:00">
+                2016-11-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/selenium/" itemprop="url" rel="index">
+                    <span itemprop="name">selenium</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><strong>1. 强制等待</strong></p>
+<pre><code># -*- coding: utf-8 -*-
+from selenium import webdriver
+from time import sleep
+
+driver = webdriver.Firefox()
+driver.get(&apos;https://fengleee.github.io&apos;)
+
+sleep(3)  # 强制等待3秒再执行下一步
+
+print driver.current_url
+driver.quit()
+</code></pre><p>这种叫强制等待，不管你浏览器是否加载完了，程序都得等待3秒，3秒一到，继续执行下面的代码，作为调试很有用，有时候也可以在代码里这样等待，不过不建议总用这种等待方式，太死板，严重影响程序执行速度。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/11/04/Selenium之三种等待方式/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2016/08/04/selenium模拟登陆/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengLeee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FengLeee">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/04/selenium模拟登陆/" itemprop="url">
+                  selenium模拟登陆
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-04T19:09:51+08:00">
+                2016-08-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/selenium/" itemprop="url" rel="index">
+                    <span itemprop="name">selenium</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li>编写一个直到某元素出现的方法</li>
+<li>最好将selenium集成到spider中去 支持并发,并且可以在收到spider close信号时退出selenium, 由于集成了selenium 在middleweares网络变成了同步的  降低了性能  ,重写download能解决这个问题(待解决)</li>
+</ol>
+
+          
         
       
     </div>
@@ -623,6 +1389,177 @@ class MyImagesPipeline(ImagesPipeline):
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2016/07/02/Python时间转换/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengLeee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FengLeee">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/02/Python时间转换/" itemprop="url">
+                  Python时间转换
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-07-02T21:21:14+08:00">
+                2016-07-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <pre><code># -*- coding: utf-8 -*-
+import time
+from datetime import datetime
+def timestamp_to_strtime(timestamp):
+    &quot;&quot;&quot;将 13 位整数的毫秒时间戳转化成本地普通时间 (字符串格式)
+    :param timestamp: 13 位整数的毫秒时间戳 (1456402864242)
+    :return: 返回字符串格式 {str}&apos;2016-02-25 20:21:04.242000&apos;
+    &quot;&quot;&quot;
+    local_str_time = datetime.fromtimestamp(timestamp / 1000.0).strftime(&apos;%Y-%m-%d %H:%M:%S.%f&apos;)
+    return local_str_time
+def timestamp_to_datetime(timestamp):
+    &quot;&quot;&quot;将 13 位整数的毫秒时间戳转化成本地普通时间 (datetime 格式)
+    :param timestamp: 13 位整数的毫秒时间戳 (1456402864242)
+    :return: 返回 datetime 格式 {datetime}2016-02-25 20:21:04.242000
+    &quot;&quot;&quot;
+    local_dt_time = datetime.fromtimestamp(timestamp / 1000.0)
+    return local_dt_time
+def datetime_to_strtime(datetime_obj):
+    &quot;&quot;&quot;将 datetime 格式的时间 (含毫秒) 转为字符串格式
+    :param datetime_obj: {datetime}2016-02-25 20:21:04.242000
+    :return: {str}&apos;2016-02-25 20:21:04.242&apos;
+    &quot;&quot;&quot;
+    local_str_time = datetime_obj.strftime(&quot;%Y-%m-%d %H:%M:%S.%f&quot;)
+    return local_str_time
+</code></pre>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/07/02/Python时间转换/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2016/05/02/pipeline中MySQL存储方式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -790,7 +1727,7 @@ class MysqlPipeline(object):
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2015/12/02/jobbole总结一/">
+    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2016/04/04/反爬虫应对方法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="FengLeee">
@@ -812,8 +1749,8 @@ class MysqlPipeline(object):
             
               
                 
-                <a class="post-title-link" href="/2015/12/02/jobbole总结一/" itemprop="url">
-                  jobbole总结一
+                <a class="post-title-link" href="/2016/04/04/反爬虫应对方法/" itemprop="url">
+                  反爬虫应对方法
                 </a>
               
             
@@ -829,8 +1766,8 @@ class MysqlPipeline(object):
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-12-02T21:40:14+08:00">
-                2015-12-02
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-04T19:09:51+08:00">
+                2016-04-04
               </time>
             
 
@@ -888,29 +1825,14 @@ class MysqlPipeline(object):
 
       
         
-          <p>Scrapy项目的 allowed_domains = [“blog.jobbole.com”] 不用加 http://<br><code>scrapy.Request(url=article_url, callback=self.parse_article, meta={&#39;front_image_url&#39;: front_image_url}</code></p>
-<p>没有follow(不是crawlSpider),通过callback调用解析函数,meta可以通过Request将数据通过Response传递到解析函数, 可用item[‘front_image_url’] = [response.meta.get(‘front_image_url’, ‘’)]获得,没有则返回’’.</p>
-<pre><code>article_div = response.xpath(&apos;//div[@id=&quot;archive&quot;]/div[@class=&quot;post floated-thumb&quot;]&apos;)
-        # xpath返回的selector对象可以直接遍历
-        for div in article_div:
-            article_url = div.xpath(&apos;./div[@class=&quot;post-meta&quot;]/p/a/@href&apos;).extract()[0]
-            front_image_url = div.xpath(&apos;./div[@class=&quot;post-thumb&quot;]/a/img/@src&apos;).extract()[0]
-            print article_url
-            print front_image_url
+          
+            <ol>
+<li>通过Headers反爬虫  通过编写中间件完成随机User-Agent的切换,注意要屏蔽scrapy自带的中间件<code>&#39;scrapy.downloadermiddlewares.useragent.UserAgentMiddleware&#39;: None,</code></li>
+<li>禁止IP访问, 减缓爬取速率 自己爬取 购买 没有找到好的办法</li>
+<li>验证码,接入云打码平台成功</li>
+</ol>
 
-            yield scrapy.Request(url=article_url, callback=self.parse_article, meta={&apos;front_image_url&apos;: front_image_url})
-
-tags_list = response.xpath(&quot;//p[@class=&apos;entry-meta-hide-on-mobile&apos;]/a/text()&quot;).extract()
-tags_list = [element for element in tags_list if not element.encode(&apos;utf-8&apos;).strip().endswith(&apos;评论&apos;)]
-tags = &apos;,&apos;.join(tags_list)
-</code></pre><p>tags_list是一个Unicode字符数组,通过列表生成式 可以重新生成一个list去掉原list中以’评论’为结尾的字符<br>通过join方法可以连接list中的字符串</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2015/12/02/jobbole总结一/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+          
         
       
     </div>
@@ -946,6 +1868,10 @@ tags = &apos;,&apos;.join(tags_list)
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -988,7 +1914,7 @@ tags = &apos;,&apos;.join(tags_list)
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -999,7 +1925,7 @@ tags = &apos;,&apos;.join(tags_list)
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1010,7 +1936,7 @@ tags = &apos;,&apos;.join(tags_list)
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

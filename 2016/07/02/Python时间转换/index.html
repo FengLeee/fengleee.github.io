@@ -1,0 +1,823 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Python," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="# -*- coding: utf-8 -*- import time from datetime import datetime def timestamp_to_strtime(timestamp):     &amp;quot;&amp;quot;&amp;quot;将 13 位整数的毫秒时间戳转化成本地普通时间 (字符串格式)     :param timestamp: 13 位整数的毫秒时间戳 (1456402">
+<meta name="keywords" content="Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python时间转换">
+<meta property="og:url" content="http://FengLeee.github.io/2016/07/02/Python时间转换/index.html">
+<meta property="og:site_name" content="FengLeee">
+<meta property="og:description" content="# -*- coding: utf-8 -*- import time from datetime import datetime def timestamp_to_strtime(timestamp):     &amp;quot;&amp;quot;&amp;quot;将 13 位整数的毫秒时间戳转化成本地普通时间 (字符串格式)     :param timestamp: 13 位整数的毫秒时间戳 (1456402">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-08-15T03:32:55.162Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python时间转换">
+<meta name="twitter:description" content="# -*- coding: utf-8 -*- import time from datetime import datetime def timestamp_to_strtime(timestamp):     &amp;quot;&amp;quot;&amp;quot;将 13 位整数的毫秒时间戳转化成本地普通时间 (字符串格式)     :param timestamp: 13 位整数的毫秒时间戳 (1456402">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'Z593YZN547',
+      apiKey: '03b60fbf902b2ee2abc3d27078790250',
+      indexName: 'dev_fengleee',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://FengLeee.github.io/2016/07/02/Python时间转换/"/>
+
+
+
+
+
+  <title> Python时间转换 | FengLeee </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">FengLeee</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2016/07/02/Python时间转换/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengLeee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FengLeee">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Python时间转换
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-07-02T21:21:14+08:00">
+                2016-07-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <pre><code># -*- coding: utf-8 -*-
+import time
+from datetime import datetime
+def timestamp_to_strtime(timestamp):
+    &quot;&quot;&quot;将 13 位整数的毫秒时间戳转化成本地普通时间 (字符串格式)
+    :param timestamp: 13 位整数的毫秒时间戳 (1456402864242)
+    :return: 返回字符串格式 {str}&apos;2016-02-25 20:21:04.242000&apos;
+    &quot;&quot;&quot;
+    local_str_time = datetime.fromtimestamp(timestamp / 1000.0).strftime(&apos;%Y-%m-%d %H:%M:%S.%f&apos;)
+    return local_str_time
+def timestamp_to_datetime(timestamp):
+    &quot;&quot;&quot;将 13 位整数的毫秒时间戳转化成本地普通时间 (datetime 格式)
+    :param timestamp: 13 位整数的毫秒时间戳 (1456402864242)
+    :return: 返回 datetime 格式 {datetime}2016-02-25 20:21:04.242000
+    &quot;&quot;&quot;
+    local_dt_time = datetime.fromtimestamp(timestamp / 1000.0)
+    return local_dt_time
+def datetime_to_strtime(datetime_obj):
+    &quot;&quot;&quot;将 datetime 格式的时间 (含毫秒) 转为字符串格式
+    :param datetime_obj: {datetime}2016-02-25 20:21:04.242000
+    :return: {str}&apos;2016-02-25 20:21:04.242&apos;
+    &quot;&quot;&quot;
+    local_str_time = datetime_obj.strftime(&quot;%Y-%m-%d %H:%M:%S.%f&quot;)
+    return local_str_time
+</code></pre><a id="more"></a>
+<pre><code>def datetime_to_timestamp(datetime_obj):
+    &quot;&quot;&quot;将本地(local) datetime 格式的时间 (含毫秒) 转为毫秒时间戳
+    :param datetime_obj: {datetime}2016-02-25 20:21:04.242000
+    :return: 13 位的毫秒时间戳  1456402864242
+    &quot;&quot;&quot;
+    local_timestamp = long(time.mktime(datetime_obj.timetuple()) * 1000.0 + datetime_obj.microsecond / 1000.0)
+    return local_timestamp
+def strtime_to_datetime(timestr):
+    &quot;&quot;&quot;将字符串格式的时间 (含毫秒) 转为 datetiem 格式
+    :param timestr: {str}&apos;2016-02-25 20:21:04.242&apos;
+    :return: {datetime}2016-02-25 20:21:04.242000
+    &quot;&quot;&quot;
+    local_datetime = datetime.strptime(timestr, &quot;%Y-%m-%d %H:%M:%S.%f&quot;)
+    return local_datetime
+def strtime_to_timestamp(local_timestr):
+    &quot;&quot;&quot;将本地时间 (字符串格式，含毫秒) 转为 13 位整数的毫秒时间戳
+    :param local_timestr: {str}&apos;2016-02-25 20:21:04.242&apos;
+    :return: 1456402864242
+    &quot;&quot;&quot;
+    local_datetime = strtime_to_datetime(local_timestr)
+    timestamp = datetime_to_timestamp(local_datetime)
+    return timestamp
+def current_datetime():
+    &quot;&quot;&quot;返回本地当前时间, 包含datetime 格式, 字符串格式, 时间戳格式
+    :return: (datetime 格式, 字符串格式, 时间戳格式)
+    &quot;&quot;&quot;
+    # 当前时间：datetime 格式
+    local_datetime_now = datetime.now()
+    # 当前时间：字符串格式
+    local_strtime_now = datetime_to_strtime(local_datetime_now)
+    # 当前时间：时间戳格式 13位整数
+    local_timestamp_now = datetime_to_timestamp(local_datetime_now)
+    return local_datetime_now, local_strtime_now, local_timestamp_now
+if __name__ == &apos;__main__&apos;:
+    time_str = &apos;2016-02-25 20:21:04.242&apos;
+    timestamp1 = strtime_to_timestamp(time_str)
+    datetime1 = strtime_to_datetime(time_str)
+    time_str2 = datetime_to_strtime(datetime1)
+    timestamp2 = datetime_to_timestamp(datetime1)
+    datetime3 = timestamp_to_datetime(timestamp2)
+    time_str3 = timestamp_to_strtime(timestamp2)
+    current_time = current_datetime()
+    print &apos;timestamp1: &apos;, timestamp1
+    print &apos;datetime1: &apos;, datetime1
+    print &apos;time_str2: &apos;, time_str2
+    print &apos;timestamp2: &apos;, timestamp2
+    print &apos;datetime3: &apos;, datetime3
+    print &apos;time_str3: &apos;, time_str3
+    print &apos;current_time: &apos;, current_time
+
+# 输出
+timestamp1:  1456402864242
+datetime1:  2016-02-25 20:21:04.242000
+time_str2:  2016-02-25 20:21:04.242000
+timestamp2:  1456402864242
+datetime3:  2016-02-25 20:21:04.242000
+time_str3:  2016-02-25 20:21:04.242000
+current_time:  (datetime.datetime(2016, 3, 19, 14, 11, 4, 901903), &apos;2016-03-19 14:11:04.901903&apos;, 145836
+</code></pre>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/02/pipeline中MySQL存储方式/" rel="next" title="pipeline中MySQL存储方式">
+                <i class="fa fa-chevron-left"></i> pipeline中MySQL存储方式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/02/重写scrapy.pipelines.images.ImagesPipeline方法实现自定义图片下载/" rel="prev" title="重写scrapy.pipelines.images.ImagesPipeline方法实现自定义图片下载">
+                重写scrapy.pipelines.images.ImagesPipeline方法实现自定义图片下载 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/tx.png"
+               alt="FengLeee" />
+          <p class="site-author-name" itemprop="name">FengLeee</p>
+           
+              <p class="site-description motion-element" itemprop="description">纵有疾风起 人生不言弃</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">FengLeee</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
