@@ -296,6 +296,1445 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2016/09/04/完全理解同步异步与阻塞非阻塞/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengLeee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FengLeee">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/09/04/完全理解同步异步与阻塞非阻塞/" itemprop="url">
+                  完全理解同步异步与阻塞非阻塞
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-04T22:09:51+08:00">
+                2016-09-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>阻塞和非阻塞</strong></p>
+<p>从简单的开始，我们以经典的读取文件的模型举例。（对操作系统而言，所有的输入输出设备都被抽象成文件。）</p>
+<p>在发起读取文件的请求时，应用层会调用系统内核的 I/O 接口。</p>
+<p>如果应用层调用的是阻塞型 I/O，那么在调用之后，应用层即刻被挂起，一直出于等待数据返回的状态，直到系统内核从磁盘读取完数据并返回给应用层，应用层才用获得的数据进行接下来的其他操作。</p>
+<p>如果应用层调用的是非阻塞 I/O，那么调用后，系统内核会立即返回（虽然还没有文件内容的数据），应用层并不会被挂起，它可以做其他任意它想做的操作。（至于文件内容数据如何返回给应用层，这已经超出了阻塞和非阻塞的辨别范畴。）</p>
+<p>这便是（脱离同步和异步来说之后）阻塞和非阻塞的区别。<strong>总结来说，是否是阻塞还是非阻塞，关注的是接口调用（发出请求）后等待数据返回时的状态。被挂起无法执行其他操作的则是阻塞型的，可以被立即「抽离」去完成其他「任务」的则是非阻塞型的。</strong><br><img src="http://oc3nlt0h2.bkt.clouddn.com/20160824-1.png" alt=""></p>
+<p><strong>同步和异步</strong></p>
+<p>阻塞和非阻塞解决了应用层等待数据返回时的状态问题，那系统内核获取到的数据到底如何返回给应用层呢？这里不同类型的操作便体现的是同步和异步的区别。</p>
+<p>对于同步型的调用，应用层需要自己去向系统内核问询，如果数据还未读取完毕，那此时读取文件的任务还未完成，应用层根据其阻塞和非阻塞的划分，或挂起或去做其他事情（所以同步和异步并不决定其等待数据返回时的状态）；如果数据已经读取完毕，那此时系统内核将数据返回给应用层，应用层即可以用取得的数据做其他相关的事情。</p>
+<p>而对于异步型的调用，应用层无需主动向系统内核问询，在系统内核读取完文件数据之后，会主动通知应用层数据已经读取完毕，此时应用层即可以接收系统内核返回过来的数据，再做其他事情。</p>
+<p>这便是（脱离阻塞和非阻塞来说之后）同步和异步的区别。<strong>也就是说，是否是同步还是异步，关注的是任务完成时消息通知的方式。由调用方盲目主动问询的方式是同步调用，由被调用方主动通知调用方任务已完成的方式是异步调用。</strong><br><img src="http://oc3nlt0h2.bkt.clouddn.com/20160824-2.png" alt=""></p>
+<p>完整来说，一个最高效且理想的文件读取异步非阻塞模型应该是这样的：应用层发起调用后系统内核立即返回（还没有文件内容数据），应用层继续做其他无关的事情，在系统内核从磁盘读取完数据之后主动通知应用层任务已完成，应用层此时接收系统内核返回的数据，然后继续做其他相关或不相关的事情。</p>
+<p>可以看到，在这个模型中，没有无谓的挂起、休眠与等待，也没有盲目无知的问询与检查，应用层做到不等候片刻的最大化利用自身的资源，系统内核也十分「善解人意」的在完成任务后主动通知应用层来接收任务成果。</p>
+<p><strong>场景举例与总结</strong></p>
+<p>最后，再来举一个我们日常的例子来加深对这几个概念的理解。</p>
+<p>假设小明需要在网上下载一个软件：</p>
+<p>如果小明点击下载按钮之后，就一直干瞪着进度条不做其他任何事情直到软件下载完成，这是同步阻塞；</p>
+<p>如果小明点击下载按钮之后，就一直干瞪着进度条不做其他任何事情直到软件下载完成，但是软件下载完成其实是会「叮」的一声通知的（但小明依然那样干等着），这是异步阻塞；（不常见）</p>
+<p>如果小明点击下载按钮之后，就去做其他事情了，不过他总需要时不时瞄一眼屏幕看软件是不是下载完成了，这是同步非阻塞；</p>
+<p>如果小明点击下载按钮之后，就去做其他事情了，软件下载完之后「叮」的一声通知小明，小明再回来继续处理下载完的软件，这是异步非阻塞。</p>
+<p>相信看完以上这个案例之后，这几个概念已经能够分辨得很清楚了。</p>
+<p>总的来说，<strong>同步和异步关注的是任务完成消息通知的机制，而阻塞和非阻塞关注的是等待任务完成时请求者的状态。</strong></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2016/08/04/多线程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengLeee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FengLeee">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/04/多线程/" itemprop="url">
+                  多线程
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-04T19:09:51+08:00">
+                2016-08-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2016/08/04/Python yield关键字/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengLeee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FengLeee">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/04/Python yield关键字/" itemprop="url">
+                  yield关键字
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-04T19:09:51+08:00">
+                2016-08-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><strong>1. 包含yield的函数</strong></p>
+<p>假如你看到某个函数包含了yield，这意味着这个函数已经是一个Generator，它的执行会和其他普通的函数有很多不同。比如下面的简单的函数：</p>
+<pre><code>def h():
+print &apos;To be brave&apos;
+yield 5
+
+h()
+</code></pre><p>可以看到，调用h()之后，print 语句并没有执行！这就是yield，那么，如何让print 语句执行呢？</p>
+<p>我们知道，我们上面的h()被调用后并没有执行，因为它有yield表达式，因此，我们通过next()语句让它执行。next()语句将恢复Generator执行，并直到下一个yield表达式处。比如：</p>
+<pre><code>def h():
+    print &apos;Wen Chuan&apos;
+    yield 5
+    print &apos;Fighting!&apos;
+
+c = h()
+c.next()
+</code></pre><p>c.next()调用后，h()开始执行，直到遇到yield 5，因此输出结果：<br>Wen Chuan<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/08/04/Python yield关键字/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2016/08/04/selenium模拟登陆/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengLeee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FengLeee">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/04/selenium模拟登陆/" itemprop="url">
+                  selenium模拟登陆
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-04T19:09:51+08:00">
+                2016-08-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/selenium/" itemprop="url" rel="index">
+                    <span itemprop="name">selenium</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li>编写一个直到某元素出现的方法</li>
+<li>最好将selenium集成到spider中去 支持并发,并且可以在收到spider close信号时退出selenium, 由于集成了selenium 在middleweares网络变成了同步的  降低了性能  ,重写download能解决这个问题(待解决)</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2016/08/02/重写scrapy.pipelines.images.ImagesPipeline方法实现自定义图片下载/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengLeee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FengLeee">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/02/重写scrapy.pipelines.images.ImagesPipeline方法实现自定义图片下载/" itemprop="url">
+                  重写scrapy.pipelines.images.ImagesPipeline方法实现自定义图片下载
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-02T21:21:14+08:00">
+                2016-08-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scrapy/" itemprop="url" rel="index">
+                    <span itemprop="name">scrapy</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>自定义图片下载</p>
+<pre><code>from scrapy.pipelines.images import ImagesPipeline
+from scrapy.exceptions import DropItem
+import scrapy
+
+class MyImagesPipeline(ImagesPipeline):
+    &apos;&apos;&apos;自定义图片下载器,以图片url为路径保存图片&apos;&apos;&apos;
+    def get_media_requests(self, item, info):
+    &apos;&apos;&apos;发生图片下载请求,其中item[&apos;front_image_url&apos;]字段是scrapy中我们自定义的url字段,
+    以数组的方式存储,遍历数组请求图片&apos;&apos;&apos;
+        for image_url in item[&apos;front_image_url&apos;]:
+            yield scrapy.Request(image_url)
+
+    def item_completed(self, results, item, info):
+    &apos;&apos;&apos;results是一个list 第一个为图片下载状态,对应OK  第二个是一个tupled其中可以为path的字段对应存储路径,而item[&apos;front_image_path&apos;]是我们自定义字段,保存在item中&apos;&apos;&apos;
+        front_image_path = [x[&apos;path&apos;] for ok, x in results if ok]
+        if not front_image_path:
+            raise DropItem(&quot;Item contains no images&quot;)
+        item[&apos;front_image_path&apos;] = front_image_path
+        return item
+
+    def file_path(self, request, response=None, info=None):
+    &apos;&apos;&apos;自定义图片保存路径,以图片的url保存,重写前是图片的url经过MD5编码后存储&apos;&apos;&apos;
+        image_guid = request.url
+        return &apos;full/%s&apos; % (image_guid)
+</code></pre><p>以上代码放到scrapy项目中的pipelines文件中</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/08/02/重写scrapy.pipelines.images.ImagesPipeline方法实现自定义图片下载/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2016/07/04/Python logging module/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengLeee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FengLeee">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/04/Python logging module/" itemprop="url">
+                  Python logging module
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-07-04T19:09:51+08:00">
+                2016-07-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>只要import logging这个模块即可使用。如果你想开发一个日志系统， 既要把日志输出到控制台， 还要写入日志文件，只要这样使用：</p>
+<pre><code>import logging
+# 创建一个logger对象
+logger = logging.getLogger(&apos;mylogger&apos;)
+logger.setLevel(logging.DEBUG)
+# 创建一个handler，用于写入日志文件
+fh = logging.FileHandler(&apos;test.log&apos;)
+fh.setLevel(logging.DEBUG)
+# 再创建一个handler，用于输出到控制台
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+# 定义handler的输出格式
+formatter = logging.Formatter(&apos;%(asctime)s - %(name)s - %(levelname)s - %(message)s&apos;)
+fh.setFormatter(formatter)
+ch.setFormatter(formatter)
+# 给logger添加handler
+logger.addHandler(fh)
+logger.addHandler(ch)
+# 记录一条日志
+logger.info(&apos;foorbar&apos;)
+</code></pre><p>结合上面的例子，我们说下几个最常使用的API：　<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/07/04/Python logging module/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2016/07/02/Python时间转换/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengLeee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FengLeee">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/02/Python时间转换/" itemprop="url">
+                  Python时间转换
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-07-02T21:21:14+08:00">
+                2016-07-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <pre><code># -*- coding: utf-8 -*-
+import time
+from datetime import datetime
+def timestamp_to_strtime(timestamp):
+    &quot;&quot;&quot;将 13 位整数的毫秒时间戳转化成本地普通时间 (字符串格式)
+    :param timestamp: 13 位整数的毫秒时间戳 (1456402864242)
+    :return: 返回字符串格式 {str}&apos;2016-02-25 20:21:04.242000&apos;
+    &quot;&quot;&quot;
+    local_str_time = datetime.fromtimestamp(timestamp / 1000.0).strftime(&apos;%Y-%m-%d %H:%M:%S.%f&apos;)
+    return local_str_time
+def timestamp_to_datetime(timestamp):
+    &quot;&quot;&quot;将 13 位整数的毫秒时间戳转化成本地普通时间 (datetime 格式)
+    :param timestamp: 13 位整数的毫秒时间戳 (1456402864242)
+    :return: 返回 datetime 格式 {datetime}2016-02-25 20:21:04.242000
+    &quot;&quot;&quot;
+    local_dt_time = datetime.fromtimestamp(timestamp / 1000.0)
+    return local_dt_time
+def datetime_to_strtime(datetime_obj):
+    &quot;&quot;&quot;将 datetime 格式的时间 (含毫秒) 转为字符串格式
+    :param datetime_obj: {datetime}2016-02-25 20:21:04.242000
+    :return: {str}&apos;2016-02-25 20:21:04.242&apos;
+    &quot;&quot;&quot;
+    local_str_time = datetime_obj.strftime(&quot;%Y-%m-%d %H:%M:%S.%f&quot;)
+    return local_str_time
+</code></pre>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/07/02/Python时间转换/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2016/05/02/pipeline中MySQL存储方式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengLeee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FengLeee">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/02/pipeline中MySQL存储方式/" itemprop="url">
+                  pipeline中MySQL存储方式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-02T00:21:14+08:00">
+                2016-05-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scrapy/" itemprop="url" rel="index">
+                    <span itemprop="name">scrapy</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>单线程阻塞操作MySQL</p>
+<pre><code>import MySQLdb
+class MysqlPipeline(object):
+    def __init__(self):
+        self.conn = MySQLdb.connect(&apos;host&apos;, &apos;user&apos;, &apos;passwd&apos;, &apos;dbname&apos;, charset=&quot;utf8&quot;, use_unicode=True)
+        self.cursor = self.conn.cursor()
+
+    def process_item(self, item, spider):
+        insert_sql = &quot;&quot;&quot;
+                  insert into dbname(Field,Field)VALUES (%s, %s)
+              &quot;&quot;&quot;
+        self.cursor.execute(insert_sql, (value,value))
+        self.conn.commit()
+        print &apos;正在插入数据&apos;
+        return item
+
+    def close_spider(self, spider):
+        #接收结束信号
+        self.conn.close()
+        print &apos;完成数据插入&apos;
+</code></pre>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/05/02/pipeline中MySQL存储方式/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2016/04/04/反爬虫应对方法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengLeee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FengLeee">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/04/04/反爬虫应对方法/" itemprop="url">
+                  反爬虫应对方法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-04T19:09:51+08:00">
+                2016-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scrapy/" itemprop="url" rel="index">
+                    <span itemprop="name">scrapy</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li>通过Headers反爬虫  通过编写中间件完成随机User-Agent的切换,注意要屏蔽scrapy自带的中间件<code>&#39;scrapy.downloadermiddlewares.useragent.UserAgentMiddleware&#39;: None,</code></li>
+<li>禁止IP访问, 减缓爬取速率 自己爬取 购买 没有找到好的办法</li>
+<li>验证码,接入云打码平台成功</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2016/04/04/Python语法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -440,173 +1879,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2015/12/02/jobbole总结一/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FengLeee">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/tx.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FengLeee">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/12/02/jobbole总结一/" itemprop="url">
-                  jobbole总结一
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-12-02T21:40:14+08:00">
-                2015-12-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/scrapy/" itemprop="url" rel="index">
-                    <span itemprop="name">scrapy</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>Scrapy项目的 allowed_domains = [“blog.jobbole.com”] 不用加 http://<br><code>scrapy.Request(url=article_url, callback=self.parse_article, meta={&#39;front_image_url&#39;: front_image_url}</code></p>
-<p>没有follow(不是crawlSpider),通过callback调用解析函数,meta可以通过Request将数据通过Response传递到解析函数, 可用item[‘front_image_url’] = [response.meta.get(‘front_image_url’, ‘’)]获得,没有则返回’’.</p>
-<pre><code>article_div = response.xpath(&apos;//div[@id=&quot;archive&quot;]/div[@class=&quot;post floated-thumb&quot;]&apos;)
-        # xpath返回的selector对象可以直接遍历
-        for div in article_div:
-            article_url = div.xpath(&apos;./div[@class=&quot;post-meta&quot;]/p/a/@href&apos;).extract()[0]
-            front_image_url = div.xpath(&apos;./div[@class=&quot;post-thumb&quot;]/a/img/@src&apos;).extract()[0]
-            print article_url
-            print front_image_url
-
-            yield scrapy.Request(url=article_url, callback=self.parse_article, meta={&apos;front_image_url&apos;: front_image_url})
-
-tags_list = response.xpath(&quot;//p[@class=&apos;entry-meta-hide-on-mobile&apos;]/a/text()&quot;).extract()
-tags_list = [element for element in tags_list if not element.encode(&apos;utf-8&apos;).strip().endswith(&apos;评论&apos;)]
-tags = &apos;,&apos;.join(tags_list)
-</code></pre><p>tags_list是一个Unicode字符数组,通过列表生成式 可以重新生成一个list去掉原list中以’评论’为结尾的字符<br>通过join方法可以连接list中的字符串</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2015/12/02/jobbole总结一/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -651,7 +1928,7 @@ tags = &apos;,&apos;.join(tags_list)
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -662,7 +1939,7 @@ tags = &apos;,&apos;.join(tags_list)
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -673,7 +1950,7 @@ tags = &apos;,&apos;.join(tags_list)
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
