@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="FengLeee">
 <meta property="og:description" content="据说，每个做 Python 开发的都被字符编码的问题搞晕过，最常见的错误就是 UnicodeEncodeError、UnicodeDecodeError，你好像知道怎么解决，遗憾的是，错误又出现在其它地方，问题总是重蹈覆辙，str 到 unicode 之间的转换用 decode 还是 encode 方法还特不好记，老是混淆，问题究竟出在哪里？ 为了弄清楚这个问题，我决定从 python 字符串的构">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-29T11:24:15.788Z">
+<meta property="og:updated_time" content="2017-09-14T01:54:45.208Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="蛋疼的编码">
 <meta name="twitter:description" content="据说，每个做 Python 开发的都被字符编码的问题搞晕过，最常见的错误就是 UnicodeEncodeError、UnicodeDecodeError，你好像知道怎么解决，遗憾的是，错误又出现在其它地方，问题总是重蹈覆辙，str 到 unicode 之间的转换用 decode 还是 encode 方法还特不好记，老是混淆，问题究竟出在哪里？ 为了弄清楚这个问题，我决定从 python 字符串的构">
@@ -399,6 +399,7 @@
 <p>计算机存储的一切数据，文本字符、图片、视频、音频、软件都是由一串01的字节序列构成的，一个字节等于8个比特位。</p>
 <p>而字符就是一个符号，比如一个汉字、一个英文字母、一个数字、一个标点都可以称为一个字符。</p>
 <p>字节方便存储和网络传输，而字符用于显示，方便阅读。例如字符 “p” 存储到硬盘是一串二进制数据 01110000，占用一个字节的长度</p>
+<a id="more"></a>
 <p><strong>编码与解码</strong></p>
 <p>我们用编辑器打开的文本，看到的一个个字符，最终保存在磁盘的时候都是以二进制字节序列形式存起来的。那么<strong>从字符到字节的转换过程就叫做编码（encode）</strong>，反过来叫做解码（decode），两者是一个可逆的过程。编码是为了存储传输，解码是为了方便显示阅读。</p>
 <p>例如字符 “p” 经过编码处理保存到硬盘是一串二进制字节序列 01110000 ，占用一个字节的长度。字符 “禅” 有可能是以 “11100111 10100110 10000101” 占用3个字节的长度存储，为什么说是有可能呢？这个放到后面再说。</p>
@@ -538,8 +539,8 @@ u&apos;Python\u4e4b\u7985&apos;
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/12/02/jobbole总结一/" rel="next" title="jobbole总结">
-                <i class="fa fa-chevron-left"></i> jobbole总结
+              <a href="/2016/04/04/Python语法/" rel="next" title="Python语法">
+                <i class="fa fa-chevron-left"></i> Python语法
               </a>
             
           </div>
@@ -548,8 +549,8 @@ u&apos;Python\u4e4b\u7985&apos;
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/04/04/Python语法/" rel="prev" title="Python语法">
-                Python语法 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/04/04/反爬虫应对方法/" rel="prev" title="反爬虫应对方法">
+                反爬虫应对方法 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -613,7 +614,7 @@ u&apos;Python\u4e4b\u7985&apos;
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

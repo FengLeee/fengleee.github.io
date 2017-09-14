@@ -97,7 +97,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://oc3nlt0h2.bkt.clouddn.com/20160824-1.png">
 <meta property="og:image" content="http://oc3nlt0h2.bkt.clouddn.com/20160824-2.png">
-<meta property="og:updated_time" content="2017-08-17T09:39:56.632Z">
+<meta property="og:updated_time" content="2017-09-14T01:54:14.791Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="完全理解同步异步与阻塞非阻塞">
 <meta name="twitter:description" content="阻塞和非阻塞 从简单的开始，我们以经典的读取文件的模型举例。（对操作系统而言，所有的输入输出设备都被抽象成文件。） 在发起读取文件的请求时，应用层会调用系统内核的 I/O 接口。 如果应用层调用的是阻塞型 I/O，那么在调用之后，应用层即刻被挂起，一直出于等待数据返回的状态，直到系统内核从磁盘读取完数据并返回给应用层，应用层才用获得的数据进行接下来的其他操作。 如果应用层调用的是非阻塞 I/O，那">
@@ -402,6 +402,7 @@
 <p>如果应用层调用的是阻塞型 I/O，那么在调用之后，应用层即刻被挂起，一直出于等待数据返回的状态，直到系统内核从磁盘读取完数据并返回给应用层，应用层才用获得的数据进行接下来的其他操作。</p>
 <p>如果应用层调用的是非阻塞 I/O，那么调用后，系统内核会立即返回（虽然还没有文件内容的数据），应用层并不会被挂起，它可以做其他任意它想做的操作。（至于文件内容数据如何返回给应用层，这已经超出了阻塞和非阻塞的辨别范畴。）</p>
 <p>这便是（脱离同步和异步来说之后）阻塞和非阻塞的区别。<strong>总结来说，是否是阻塞还是非阻塞，关注的是接口调用（发出请求）后等待数据返回时的状态。被挂起无法执行其他操作的则是阻塞型的，可以被立即「抽离」去完成其他「任务」的则是非阻塞型的。</strong><br><img src="http://oc3nlt0h2.bkt.clouddn.com/20160824-1.png" alt=""></p>
+<a id="more"></a>
 <p><strong>同步和异步</strong></p>
 <p>阻塞和非阻塞解决了应用层等待数据返回时的状态问题，那系统内核获取到的数据到底如何返回给应用层呢？这里不同类型的操作便体现的是同步和异步的区别。</p>
 <p>对于同步型的调用，应用层需要自己去向系统内核问询，如果数据还未读取完毕，那此时读取文件的任务还未完成，应用层根据其阻塞和非阻塞的划分，或挂起或去做其他事情（所以同步和异步并不决定其等待数据返回时的状态）；如果数据已经读取完毕，那此时系统内核将数据返回给应用层，应用层即可以用取得的数据做其他相关的事情。</p>
@@ -460,8 +461,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/08/04/多线程/" rel="next" title="多线程">
-                <i class="fa fa-chevron-left"></i> 多线程
+              <a href="/2016/08/04/selenium模拟登陆/" rel="next" title="selenium模拟登陆">
+                <i class="fa fa-chevron-left"></i> selenium模拟登陆
               </a>
             
           </div>
@@ -535,7 +536,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

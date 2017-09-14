@@ -559,10 +559,11 @@ form_data = {
 
       
         
-          <p>中国裁判文书网算是比较难爬的网站了,这其中涉及到了JS加密,验证码处理,cookie登陆等多项技术,下面就这个项目做个总结</p>
-<p>1: 我们的目标是爬取网站的裁判文书,把文书内容存储到本地．先谈一谈这个网站数据请求的方式　我们每次请求操作都要求输入验证码，</p>
-<p>验证码的URL是由前端随机生成的GUID组成的,通过查看JS代码能够随机伪造GUID,然后请求验证码,这个验证码Pytesser不能识别.</p>
-<p>只有通过第三方打码平台完成自动识别.</p>
+          <p><strong>crawl 文书网遇到的问题和用到的技术</strong></p>
+<p>中国裁判文书网算是比较难爬的网站了,这其中涉及到了JS加密,验证码处理,cookie登陆等多项技术,下面就这个项目做个总结:</p>
+<p>1: 我们的目标是爬取网站的裁判文书,把文书内容存储到本地．先谈一谈这个网站数据请求的方式　我们每次请求操作都要求</p>
+<p>输入验证码，验证码的URL是由前端随机生成的GUID组成的,通过查看JS代码能够随机伪造GUID,然后请求验证码,这个验证码</p>
+<p>Pytesser不能识别.只有通过第三方打码平台完成自动识别.</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/06/02/裁判文书网/#more" rel="contents">
@@ -908,6 +909,184 @@ process_exception(self, request, exception, spider):
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2017/04/04/MYSQL配置utf8mb4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FengLeee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FengLeee">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/04/MYSQL配置utf8mb4/" itemprop="url">
+                  MYSQL配置utf8mb4
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-04T19:09:51+08:00">
+                2017-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MySQL/" itemprop="url" rel="index">
+                    <span itemprop="name">MySQL</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>对于Python来说 最好用pymsql. MySQLDB在win10环境下charset不能设置为utf8mb4这是一个很大的坑</strong></p>
+<p>在mysql 5.5 之前，UTF-8编码只支持1-3个字节；从MySQL 5.5开始，可以支持4个字节UTF编码 utf8mb4 ，一个字符能够支持更多的字符集，也能够支持更多表情符号。</p>
+<p><strong>一：首先我们修改my.cnf参数</strong></p>
+<pre><code>[client]
+# 客户端连接
+default-character-set=utf8mb4
+
+
+[mysql]
+# 远程连接
+default-character-set=utf8mb4
+
+
+[mysqld]
+# 在window下不能直接添加 要找到默认的character-set-server 然后覆盖
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+init_connect = &apos;SET NAMES utf8mb4&apos;
+character-set-client-handshake = true
+</code></pre><p><strong>登录数据库检查是否如下：</strong></p>
+<pre><code>mysql&gt; SHOW VARIABLES WHERE Variable_name LIKE &apos;character%&apos; OR Variable_name LIKE &apos;collation%&apos;;
++--------------------------+--------------------+
+| Variable_name            | Value              |
++--------------------------+--------------------+
+| character_set_client    | utf8mb4            |
+| character_set_connection | utf8mb4            |
+| character_set_database  | utf8mb4            |
+| character_set_filesystem | binary            |
+| character_set_results    | utf8mb4            |
+| character_set_server    | utf8mb4            |
+| character_set_system    | utf8              |
+| collation_connection    | utf8mb4_unicode_ci |
+| collation_database      | utf8mb4_unicode_ci |
+| collation_server        | utf8mb4_unicode_ci |
++--------------------------+--------------------+
+rows in set (0.00 sec)
+</code></pre>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2017/04/04/简明Python教程/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1046,184 +1225,6 @@ dir(list)
 <p>集合</p>
 <p>集合（Set）是简单对象的无序集合（Collection）。当集合中的项目存在与否比起次序或其出<br>现次数更加重要时，我们就会使用集合。</p>
 
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://FengLeee.github.io/2017/04/04/MYSQL配置utf8mb4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FengLeee">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/tx.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FengLeee">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/04/MYSQL配置utf8mb4/" itemprop="url">
-                  MYSQL配置utf8mb4
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-04T19:09:51+08:00">
-                2017-04-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/MySQL/" itemprop="url" rel="index">
-                    <span itemprop="name">MySQL</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>对于Python来说 最好用pymsql. MySQLDB在win10环境下charset不能设置为utf8mb4这是一个很大的坑</strong></p>
-<p>在mysql 5.5 之前，UTF-8编码只支持1-3个字节；从MySQL 5.5开始，可以支持4个字节UTF编码 utf8mb4 ，一个字符能够支持更多的字符集，也能够支持更多表情符号。</p>
-<p><strong>一：首先我们修改my.cnf参数</strong></p>
-<pre><code>[client]
-# 客户端连接
-default-character-set=utf8mb4
-
-
-[mysql]
-# 远程连接
-default-character-set=utf8mb4
-
-
-[mysqld]
-# 在window下不能直接添加 要找到默认的character-set-server 然后覆盖
-character-set-server = utf8mb4
-collation-server = utf8mb4_unicode_ci
-init_connect = &apos;SET NAMES utf8mb4&apos;
-character-set-client-handshake = true
-</code></pre><p><strong>登录数据库检查是否如下：</strong></p>
-<pre><code>mysql&gt; SHOW VARIABLES WHERE Variable_name LIKE &apos;character%&apos; OR Variable_name LIKE &apos;collation%&apos;;
-+--------------------------+--------------------+
-| Variable_name            | Value              |
-+--------------------------+--------------------+
-| character_set_client    | utf8mb4            |
-| character_set_connection | utf8mb4            |
-| character_set_database  | utf8mb4            |
-| character_set_filesystem | binary            |
-| character_set_results    | utf8mb4            |
-| character_set_server    | utf8mb4            |
-| character_set_system    | utf8              |
-| collation_connection    | utf8mb4_unicode_ci |
-| collation_database      | utf8mb4_unicode_ci |
-| collation_server        | utf8mb4_unicode_ci |
-+--------------------------+--------------------+
-rows in set (0.00 sec)
-</code></pre>
           
         
       
@@ -1936,7 +1937,7 @@ driver.quit()
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
